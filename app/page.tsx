@@ -31,6 +31,12 @@ export default function Home() {
             
             <div className="grid grid-cols-2 gap-4 mt-4">
               <Link 
+                href="/products"
+                className="rounded bg-orange-600 px-4 py-2 text-white hover:bg-orange-700 text-center"
+              >
+                🛍️ Products
+              </Link>
+              <Link 
                 href="/cart"
                 className="rounded bg-blue-600 px-4 py-2 text-white hover:bg-blue-700 text-center"
               >
