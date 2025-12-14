@@ -10,6 +10,7 @@ const isPublicRoute = createRouteMatcher([
 ]);
 
 const isProtectedRoute = createRouteMatcher([
+  '/admin(.*)',
   '/products(.*)',
   '/product(.*)',
   '/category(.*)',
@@ -29,7 +30,7 @@ const isProtectedRoute = createRouteMatcher([
 ]);
 
 export default clerkMiddleware(async (auth, request) => {
-  if (!isPublicRoute(request)) {
+  if (isProtectedRoute(request)) {
     await auth.protect();
   }
 });

@@ -72,6 +72,12 @@ export default function Home() {
               >
                 📊 Dashboard
               </Link>
+              <Link 
+                href="/admin/dashboard"
+                className="rounded bg-red-600 px-4 py-2 text-white hover:bg-red-700 text-center"
+              >
+                🔐 Admin Panel
+              </Link>
             </div>
           </div>
         </SignedIn>
