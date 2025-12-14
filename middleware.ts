@@ -29,8 +29,21 @@ const isProtectedRoute = createRouteMatcher([
   '/notifications(.*)',
 ]);
 
+const isTenantProtectedRoute = (pathname: string): boolean => {
+  const segments = pathname.split('/').filter(Boolean);
+  if (segments.length < 2) return false;
+  
+  const systemRoutes = ['admin', 'sign-in', 'sign-up', 'api', 'studio', 'about', 'contact', 'help'];
+  if (systemRoutes.includes(segments[0])) return false;
+  
+  const protectedTenantRoutes = ['products', 'cart', 'checkout', 'orders', 'wishlist', 'profile'];
+  return protectedTenantRoutes.includes(segments[1]);
+};
+
 export default clerkMiddleware(async (auth, request) => {
-  if (isProtectedRoute(request)) {
+  const pathname = request.nextUrl.pathname;
+  
+  if (isProtectedRoute(request) || isTenantProtectedRoute(pathname)) {
     await auth.protect();
   }
 });

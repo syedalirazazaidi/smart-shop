@@ -1,6 +1,6 @@
 import Navbar from "@/components/navbar";
 
-export default async function StoreLayout({
+export default async function AppLayout({
   children,
 }: {
   children: React.ReactNode;
