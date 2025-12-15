@@ -1,25 +1,49 @@
+import { createServerSupabase } from '@/lib/supabase/server';
+
 export interface Tenant {
   id: string;
   slug: string;
   name: string;
   domain?: string;
+  created_at?: string;
+  updated_at?: string;
 }
 
 export async function getTenantFromSlug(slug: string): Promise<Tenant | null> {
-  // TODO: Fetch tenant from database
-  // Example implementation:
-  // const tenant = await db.tenant.findUnique({ where: { slug } });
-  
-  // For now, return mock data
-  if (slug === 'demo-store' || slug === 'example') {
-    return {
-      id: '1',
-      slug: slug,
-      name: slug === 'demo-store' ? 'Demo Store' : 'Example Store',
-    };
+  try {
+    const supabase = await createServerSupabase();
+    
+    const { data, error } = await supabase
+      .from('tenants')
+      .select('*')
+      .eq('slug', slug)
+      .single();
+    
+    if (error || !data) {
+      // Fallback to mock data for development
+      if (slug === 'demo-store' || slug === 'example') {
+        return {
+          id: '1',
+          slug: slug,
+          name: slug === 'demo-store' ? 'Demo Store' : 'Example Store',
+        };
+      }
+      return null;
+    }
+    
+    return data as Tenant;
+  } catch (error) {
+    console.error('Error fetching tenant:', error);
+    // Fallback to mock data for development
+    if (slug === 'demo-store' || slug === 'example') {
+      return {
+        id: '1',
+        slug: slug,
+        name: slug === 'demo-store' ? 'Demo Store' : 'Example Store',
+      };
+    }
+    return null;
   }
-  
-  return null;
 }
 
 export async function getTenantFromDomain(domain: string): Promise<Tenant | null> {
