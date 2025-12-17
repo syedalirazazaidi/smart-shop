@@ -7,6 +7,7 @@ const isPublicRoute = createRouteMatcher([
   '/about',
   '/contact',
   '/help',
+  '/studio(.*)', // Sanity Studio should be public
 ]);
 
 const isProtectedRoute = createRouteMatcher([
@@ -30,6 +31,9 @@ const isProtectedRoute = createRouteMatcher([
 ]);
 
 const isTenantProtectedRoute = (pathname: string): boolean => {
+  // Skip studio routes completely
+  if (pathname.startsWith('/studio')) return false;
+  
   const segments = pathname.split('/').filter(Boolean);
   if (segments.length < 2) return false;
   

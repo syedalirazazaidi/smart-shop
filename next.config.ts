@@ -1,7 +1,13 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  transpilePackages: ['@sanity/ui', '@sanity/icons'],
+  serverExternalPackages: ['jsdom'],
+  turbopack: {
+    resolveAlias: {
+      // Add any alias configurations if needed
+    },
+  },
 };
 
 export default nextConfig;
