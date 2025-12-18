@@ -12,9 +12,9 @@ export default async function AppLayout({
       <Navbar variant="default" />
       <main>
         <ClerkProvider>
-        {children}
+          {children}
         </ClerkProvider>
-        </main>
+      </main>
       <SanityLive />
     </div>
   );
