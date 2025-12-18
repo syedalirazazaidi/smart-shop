@@ -1,0 +1,4 @@
+{"_type":"tenant","name":"Demo Store","slug":{"_type":"slug","current":"demo-store"},"description":"A demo ecommerce store showcasing our multi-tenant platform","domain":"demo.example.com"}
+{"_type":"tenant","name":"Example Store","slug":{"_type":"slug","current":"example"},"description":"Another example store for testing purposes","domain":"example.example.com"}
+{"_type":"tenant","name":"Tech Store","slug":{"_type":"slug","current":"tech-store"},"description":"Your one-stop shop for all tech gadgets and accessories"}
+
