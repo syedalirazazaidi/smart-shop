@@ -22,11 +22,18 @@ export const productType = defineType({
       validation: (Rule) => Rule.required(),
     }),
     defineField({
-      name: 'tenant',
+      name: 'shop',
       title: 'Store (Tenant)',
       type: 'reference',
       to: [{ type: 'tenant' }],
-      validation: (Rule) => Rule.required(),
+      // Temporarily optional - will make required later
+      // validation: (Rule) => Rule.required(),
+    }),
+    defineField({
+      name: 'shopName',
+      title: 'Shop Name',
+      type: 'string',
+      description: 'Name of the store/shop (can be different from tenant name)',
     }),
     defineField({
       name: 'description',
@@ -44,6 +51,12 @@ export const productType = defineType({
       title: 'Product Images',
       type: 'array',
       of: [{ type: 'image', options: { hotspot: true } }],
+    }),
+    defineField({
+      name: 'imageUrl',
+      title: 'Image URL',
+      type: 'url',
+      description: 'External image URL (for reference or manual upload)',
     }),
     defineField({
       name: 'category',
