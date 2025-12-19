@@ -63,7 +63,7 @@ export default function ProductsPage({ products, categories }: ProductsPageProps
 
         {/* Products Grid */}
         {products && products.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 lg:gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 lg:gap-8">
             {products.map((product) => (
               <Link
                 key={product._id}
@@ -71,7 +71,7 @@ export default function ProductsPage({ products, categories }: ProductsPageProps
                 className="group bg-white dark:bg-gray-900 rounded-lg overflow-hidden hover:shadow-md transition-shadow duration-200"
               >
                 {/* Image Container */}
-                <div className="relative aspect-square w-full overflow-hidden bg-white dark:bg-gray-100">
+                <div className="relative aspect-[4/3] w-full overflow-hidden bg-white dark:bg-gray-100">
                   {product.imageUrl ? (
                     <img
                       src={product.imageUrl}
