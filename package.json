@@ -3,10 +3,12 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "npm run typegen && next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "typegen": "node scripts/generate-types.mjs",
+    "prebuild": "npm run typegen"
   },
   "dependencies": {
     "@clerk/nextjs": "^6.36.2",
@@ -17,6 +19,8 @@
     "@supabase/supabase-js": "^2.87.2",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "embla-carousel-autoplay": "^8.6.0",
+    "embla-carousel-react": "^8.6.0",
     "lucide-react": "^0.561.0",
     "next": "16.0.10",
     "next-sanity": "^11.6.10",
