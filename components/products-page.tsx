@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import Link from "next/link";
 import type { Product } from "@/sanity/types";
 import {
@@ -10,6 +10,15 @@ import {
   CarouselPrevious,
   CarouselNext,
 } from "@/components/ui/carousel";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
 import Autoplay from "embla-carousel-autoplay";
 
 interface ProductsPageProps {
@@ -18,6 +27,9 @@ interface ProductsPageProps {
 }
 
 export default function ProductsPage({ products, categories }: ProductsPageProps) {
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 12;
+
   const autoplayPlugin = useMemo(
     () =>
       Autoplay({
@@ -28,12 +40,50 @@ export default function ProductsPage({ products, categories }: ProductsPageProps
     []
   );
 
-  // Get featured products for carousel (first 5 products)
   const featuredProducts = products?.slice(1, 5) || [];
+
+  const totalPages = Math.ceil((products?.length || 0) / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const paginatedProducts = products?.slice(startIndex, endIndex) || [];
+
+  const getPageNumbers = () => {
+    const pages: (number | string)[] = [];
+    const maxVisible = 5;
+
+    if (totalPages <= maxVisible) {
+      for (let i = 1; i <= totalPages; i++) {
+        pages.push(i);
+      }
+    } else {
+      if (currentPage <= 3) {
+        for (let i = 1; i <= 4; i++) {
+          pages.push(i);
+        }
+        pages.push("ellipsis");
+        pages.push(totalPages);
+      } else if (currentPage >= totalPages - 2) {
+        pages.push(1);
+        pages.push("ellipsis");
+        for (let i = totalPages - 3; i <= totalPages; i++) {
+          pages.push(i);
+        }
+      } else {
+        pages.push(1);
+        pages.push("ellipsis");
+        for (let i = currentPage - 1; i <= currentPage + 1; i++) {
+          pages.push(i);
+        }
+        pages.push("ellipsis");
+        pages.push(totalPages);
+      }
+    }
+
+    return pages;
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-50 dark:from-gray-950 dark:via-black dark:to-gray-950">
-      {/* Hero Section with Carousel */}
       <div className="bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 dark:from-gray-900 dark:via-blue-950 dark:to-purple-950">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Featured Products Carousel */}
@@ -153,9 +203,18 @@ export default function ProductsPage({ products, categories }: ProductsPageProps
       </div>
 
       {/* Main Content */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div className=" flex max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div>
+          <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
+            All Products
+          </h2>
+          <p className="text-gray-600 dark:text-gray-400 mb-8">
+            Explore our wide range of products across various categories
+          </p>  
+        </div>
         {/* Stats and Filters Bar */}
-        {products && products.length > 0 && (
+        <div>
+          {products && products.length > 0 && (
           <div className="mb-8 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
             <div className="flex items-center gap-6">
               <div>
@@ -192,8 +251,9 @@ export default function ProductsPage({ products, categories }: ProductsPageProps
 
         {/* Products Grid */}
         {products && products.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 lg:gap-8">
-            {products.map((product) => (
+          <>
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 gap-6 lg:gap-8">
+              {paginatedProducts.map((product) => (
               <Link
                 key={product._id}
                 href={`/products/${product.slug.current}`}
@@ -253,8 +313,66 @@ export default function ProductsPage({ products, categories }: ProductsPageProps
                   </div>
                 </div>
               </Link>
-            ))}
-          </div>
+              ))}
+            </div>
+
+            {/* Pagination */}
+            {totalPages > 1 && (
+              <div className="mt-12 flex justify-center">
+                <Pagination>
+                  <PaginationContent>
+                    <PaginationItem>
+                      <PaginationPrevious
+                        href="#"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          if (currentPage > 1) {
+                            setCurrentPage(currentPage - 1);
+                            window.scrollTo({ top: 0, behavior: "smooth" });
+                          }
+                        }}
+                        className={currentPage === 1 ? "pointer-events-none opacity-50" : ""}
+                      />
+                    </PaginationItem>
+
+                    {getPageNumbers().map((page, index) => (
+                      <PaginationItem key={index}>
+                        {page === "ellipsis" ? (
+                          <PaginationEllipsis />
+                        ) : (
+                          <PaginationLink
+                            href="#"
+                            onClick={(e) => {
+                              e.preventDefault();
+                              setCurrentPage(page as number);
+                              window.scrollTo({ top: 0, behavior: "smooth" });
+                            }}
+                            isActive={currentPage === page}
+                          >
+                            {page}
+                          </PaginationLink>
+                        )}
+                      </PaginationItem>
+                    ))}
+
+                    <PaginationItem>
+                      <PaginationNext
+                        href="#"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          if (currentPage < totalPages) {
+                            setCurrentPage(currentPage + 1);
+                            window.scrollTo({ top: 0, behavior: "smooth" });
+                          }
+                        }}
+                        className={currentPage === totalPages ? "pointer-events-none opacity-50" : ""}
+                      />
+                    </PaginationItem>
+                  </PaginationContent>
+                </Pagination>
+              </div>
+            )}
+          </>
         ) : (
           <div className="text-center py-24">
             <div className="max-w-md mx-auto">
@@ -286,6 +404,7 @@ export default function ProductsPage({ products, categories }: ProductsPageProps
             </div>
           </div>
         )}
+        </div>
       </div>
     </div>
   );
